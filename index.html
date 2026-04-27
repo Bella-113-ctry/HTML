@@ -1,0 +1,1039 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>小红书的电商探索与转型</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'PingFang SC', sans-serif;
+            background: #0a0a0f;
+            color: #fff;
+            overflow: hidden;
+        }
+
+        .slide-container {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            transition: transform 1s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .slide {
+            min-width: 100vw;
+            height: 100vh;
+            padding: 80px 100px;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            background: linear-gradient(135deg, #0a0a0f 0%, #1a1a2e 50%, #0f0f1a 100%);
+            overflow: hidden;
+        }
+
+        /* 动态背景 */
+        .bg-gradient {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background:
+                radial-gradient(ellipse at 20% 20%, rgba(99, 102, 241, 0.15) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 80%, rgba(168, 85, 247, 0.1) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 50%, rgba(59, 130, 246, 0.05) 0%, transparent 70%);
+            pointer-events: none;
+            animation: bgPulse 8s ease-in-out infinite;
+        }
+
+        @keyframes bgPulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.8; transform: scale(1.05); }
+        }
+
+        /* 光效线条 */
+        .light-line {
+            position: absolute;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            animation: lightMove 3s ease-in-out infinite;
+        }
+
+        .light-line-1 { top: 30%; width: 300px; left: -300px; animation-delay: 0s; }
+        .light-line-2 { top: 50%; width: 200px; left: -200px; animation-delay: 1s; }
+        .light-line-3 { top: 70%; width: 400px; left: -400px; animation-delay: 2s; }
+
+        @keyframes lightMove {
+            0% { left: -400px; opacity: 0; }
+            50% { opacity: 1; }
+            100% { left: 100%; opacity: 0; }
+        }
+
+        /* 动画基础 */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(40px);
+            animation: fadeInUp 1s ease forwards;
+        }
+
+        .fade-in-delay-1 { animation-delay: 0.2s; }
+        .fade-in-delay-2 { animation-delay: 0.4s; }
+        .fade-in-delay-3 { animation-delay: 0.6s; }
+        .fade-in-delay-4 { animation-delay: 0.8s; }
+        .fade-in-delay-5 { animation-delay: 1s; }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* 炫酷悬停效果 */
+        .hover-glow {
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .hover-glow:hover {
+            transform: translateY(-12px) scale(1.02);
+            box-shadow:
+                0 25px 50px rgba(99, 102, 241, 0.3),
+                0 0 60px rgba(168, 85, 247, 0.15),
+                inset 0 1px 0 rgba(255,255,255,0.1);
+        }
+
+        /* 发光边框 */
+        .glow-border {
+            position: relative;
+        }
+
+        .glow-border::before {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            background: linear-gradient(135deg, #6366f1, #a855f7, #ec4899, #6366f1);
+            border-radius: inherit;
+            z-index: -1;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            animation: borderRotate 3s linear infinite;
+            background-size: 300% 300%;
+        }
+
+        .glow-border:hover::before {
+            opacity: 1;
+        }
+
+        @keyframes borderRotate {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* 脉冲光环 */
+        .pulse-ring {
+            position: relative;
+        }
+
+        .pulse-ring::after {
+            content: '';
+            position: absolute;
+            inset: -4px;
+            border-radius: inherit;
+            border: 2px solid rgba(99, 102, 241, 0.5);
+            animation: pulseRing 2s ease-out infinite;
+        }
+
+        @keyframes pulseRing {
+            0% { transform: scale(1); opacity: 1; }
+            100% { transform: scale(1.1); opacity: 0; }
+        }
+
+        /* 数字跳动 */
+        .number-glow {
+            background: linear-gradient(135deg, #6366f1, #a855f7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: numberPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes numberPulse {
+            0%, 100% { filter: brightness(1); }
+            50% { filter: brightness(1.3); }
+        }
+
+        /* 页码指示器 */
+        .page-indicator {
+            position: fixed;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 12px;
+            z-index: 100;
+        }
+
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+        }
+
+        .dot::before {
+            content: '';
+            position: absolute;
+            inset: -6px;
+            border-radius: 50%;
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .dot:hover::before {
+            opacity: 1;
+        }
+
+        .dot.active {
+            background: linear-gradient(135deg, #6366f1, #a855f7);
+            width: 32px;
+            border-radius: 5px;
+            box-shadow: 0 0 20px rgba(99, 102, 241, 0.5);
+        }
+
+        /* 导航按钮 */
+        .nav-btn {
+            position: fixed;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 56px;
+            height: 56px;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            color: #fff;
+            font-size: 22px;
+            cursor: pointer;
+            z-index: 100;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .nav-btn:hover {
+            background: rgba(99, 102, 241, 0.3);
+            border-color: rgba(99, 102, 241, 0.5);
+            transform: translateY(-50%) scale(1.1);
+            box-shadow: 0 0 30px rgba(99, 102, 241, 0.4);
+        }
+
+        .nav-btn.prev { left: 30px; }
+        .nav-btn.next { right: 30px; }
+
+        .logo {
+            position: absolute;
+            top: 70px;
+            right: 60px;
+            width: 70px;
+            height: 70px;
+            z-index: 50;
+            opacity: 0.9;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            filter: drop-shadow(0 4px 20px rgba(0, 0, 0, 0.3));
+        }
+
+        .logo:hover {
+            transform: scale(1.1);
+            opacity: 1;
+        }
+
+        /* 通用标题样式 */
+        .page-tag {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.5);
+            letter-spacing: 0.1em;
+            margin-bottom: 16px;
+            font-weight: 500;
+            text-transform: uppercase;
+        }
+
+        .page-title {
+            font-size: 64px;
+            font-weight: 700;
+            letter-spacing: -0.03em;
+            line-height: 1.05;
+            margin-bottom: 16px;
+            background: linear-gradient(135deg, #fff 0%, #a5b4fc 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .page-subtitle {
+            font-size: 22px;
+            color: rgba(255, 255, 255, 0.6);
+            font-weight: 400;
+            line-height: 1.5;
+        }
+
+        /* 第一页 */
+        .slide-1 .header {
+            margin-bottom: 50px;
+        }
+
+        .core-problem {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.15) 0%, rgba(168, 85, 247, 0.1) 100%);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            border-radius: 24px;
+            padding: 36px 48px;
+            margin: 40px 0;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .core-problem::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 200%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+            animation: shimmer 3s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        .core-problem .label {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.5);
+            margin-bottom: 16px;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+        }
+
+        .core-problem .question {
+            font-size: 32px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #f472b6, #c084fc, #818cf8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -0.01em;
+        }
+
+        /* 炫酷时间轴 */
+        .timeline {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 60px;
+            padding: 0 40px;
+            position: relative;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            top: 32px;
+            left: 80px;
+            right: 80px;
+            height: 3px;
+            background: linear-gradient(90deg, #6366f1, #a855f7, #ec4899, #f472b6);
+            border-radius: 2px;
+            box-shadow: 0 0 20px rgba(99, 102, 241, 0.5);
+        }
+
+        .timeline-item {
+            text-align: center;
+            position: relative;
+            z-index: 1;
+            cursor: pointer;
+        }
+
+        .timeline-item .year {
+            width: 64px;
+            height: 64px;
+            background: linear-gradient(135deg, #1a1a2e 0%, #2d2d44 100%);
+            border: 2px solid rgba(99, 102, 241, 0.5);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-weight: 700;
+            font-size: 15px;
+            color: #a5b4fc;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+        }
+
+        .timeline-item:hover .year {
+            background: linear-gradient(135deg, #6366f1, #a855f7);
+            border-color: transparent;
+            transform: scale(1.15) translateY(-8px);
+            box-shadow:
+                0 20px 40px rgba(99, 102, 241, 0.4),
+                0 0 60px rgba(168, 85, 247, 0.3);
+            color: #fff;
+        }
+
+        .timeline-item .year::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 2px solid rgba(99, 102, 241, 0.3);
+            animation: yearPulse 2s ease-out infinite;
+        }
+
+        @keyframes yearPulse {
+            0% { transform: scale(1); opacity: 1; }
+            100% { transform: scale(1.5); opacity: 0; }
+        }
+
+        .timeline-item .content {
+            max-width: 140px;
+        }
+
+        .timeline-item .title {
+            font-weight: 600;
+            font-size: 16px;
+            color: #fff;
+            margin-bottom: 6px;
+            transition: all 0.3s ease;
+        }
+
+        .timeline-item:hover .title {
+            color: #a5b4fc;
+            text-shadow: 0 0 20px rgba(165, 180, 252, 0.5);
+        }
+
+        .timeline-item .desc {
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        /* 第二页 */
+        .slide-2 .header {
+            padding: 0 60px;
+        }
+
+        .analysis-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 48px;
+            margin-top: 50px;
+            flex: 1;
+            align-items: stretch;
+            padding: 0 40px;
+        }
+
+        .analysis-card {
+            background: linear-gradient(135deg, rgba(30, 30, 50, 0.8) 0%, rgba(20, 20, 35, 0.9) 100%);
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            border-radius: 24px;
+            padding: 24px;
+            backdrop-filter: blur(10px);
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .analysis-card h3 {
+            font-size: 22px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-shrink: 0;
+        }
+
+        .analysis-card .analysis-items {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .analysis-card .analysis-item {
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            transition: all 0.3s ease;
+        }
+
+        .analysis-card .analysis-item:last-child {
+            border-bottom: none;
+        }
+
+        .analysis-card .analysis-item .header {
+            margin-bottom: 6px;
+        }
+
+        .analysis-card .analysis-item .desc {
+            padding-left: 40px;
+            font-size: 13px;
+        }
+
+        .analysis-card:hover {
+            transform: translateY(-16px) scale(1.02);
+            border-color: rgba(99, 102, 241, 0.5);
+            box-shadow:
+                0 30px 60px rgba(0, 0, 0, 0.4),
+                0 0 80px rgba(99, 102, 241, 0.2);
+        }
+
+        .analysis-card h3 {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 28px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .analysis-card.pest h3 {
+            background: linear-gradient(135deg, #60a5fa, #818cf8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .analysis-card.forces h3 {
+            background: linear-gradient(135deg, #f472b6, #c084fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .analysis-card h3 .icon {
+            font-size: 28px;
+            filter: drop-shadow(0 0 10px rgba(99, 102, 241, 0.5));
+        }
+
+        .analysis-item {
+            padding: 18px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            transition: all 0.3s ease;
+        }
+
+        .analysis-item:last-child {
+            border-bottom: none;
+        }
+
+        .analysis-item:hover {
+            padding-left: 12px;
+            background: rgba(99, 102, 241, 0.05);
+            border-radius: 12px;
+        }
+
+        .analysis-item .header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 8px;
+        }
+
+        .analysis-item .letter {
+            width: 30px;
+            height: 30px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 13px;
+            color: #fff;
+            flex-shrink: 0;
+        }
+
+        .pest .letter { background: linear-gradient(135deg, #6366f1, #8b5cf6); }
+        .forces .letter { background: linear-gradient(135deg, #ec4899, #f472b6); }
+
+        .analysis-item .name {
+            font-weight: 600;
+            font-size: 15px;
+            color: #fff;
+        }
+
+        .analysis-item .desc {
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.6);
+            line-height: 1.5;
+            padding-left: 42px;
+        }
+
+        /* 第三页 */
+        .slide-3 .header {
+            padding: 0 60px;
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 32px;
+            margin-top: 40px;
+            flex: 1;
+        }
+
+        .problem-card {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.1) 0%, rgba(30, 30, 50, 0.8) 100%);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            border-radius: 24px;
+            padding: 28px;
+            backdrop-filter: blur(10px);
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .problem-card:hover {
+            transform: translateY(-16px) scale(1.02);
+            border-color: rgba(239, 68, 68, 0.6);
+            box-shadow:
+                0 30px 60px rgba(0, 0, 0, 0.4),
+                0 0 80px rgba(239, 68, 68, 0.15);
+        }
+
+        .solution-card {
+            background: linear-gradient(135deg, rgba(34, 197, 94, 0.1) 0%, rgba(30, 30, 50, 0.8) 100%);
+            border: 1px solid rgba(34, 197, 94, 0.3);
+            border-radius: 24px;
+            padding: 28px;
+            backdrop-filter: blur(10px);
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .solution-card:hover {
+            transform: translateY(-16px) scale(1.02);
+            border-color: rgba(34, 197, 94, 0.6);
+            box-shadow:
+                0 30px 60px rgba(0, 0, 0, 0.4),
+                0 0 80px rgba(34, 197, 94, 0.15);
+        }
+
+        .card-title {
+            font-size: 22px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .problem-card .card-title {
+            background: linear-gradient(135deg, #f87171, #f472b6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .solution-card .card-title {
+            background: linear-gradient(135deg, #4ade80, #34d399);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .card-list {
+            list-style: none;
+        }
+
+        .card-list li {
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.85);
+            line-height: 1.5;
+            transition: all 0.3s ease;
+        }
+
+        .card-list li:last-child {
+            border-bottom: none;
+        }
+
+        .card-list li:hover {
+            color: #fff;
+            padding-left: 8px;
+        }
+
+        .card-list .num {
+            width: 26px;
+            height: 26px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .problem-card .num {
+            background: linear-gradient(135deg, #ef4444, #f87171);
+            box-shadow: 0 0 15px rgba(239, 68, 68, 0.4);
+        }
+
+        .solution-card .num {
+            background: linear-gradient(135deg, #22c55e, #4ade80);
+            box-shadow: 0 0 15px rgba(34, 197, 94, 0.4);
+        }
+
+        .card-list strong {
+            color: #fff;
+        }
+
+        .challenge-bar {
+            grid-column: 1 / -1;
+            background: linear-gradient(135deg, rgba(251, 191, 36, 0.1) 0%, rgba(30, 30, 50, 0.8) 100%);
+            border: 1px solid rgba(251, 191, 36, 0.3);
+            border-radius: 20px;
+            padding: 20px 28px;
+            margin-top: 16px;
+            backdrop-filter: blur(10px);
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .challenge-bar:hover {
+            transform: translateY(-8px);
+            border-color: rgba(251, 191, 36, 0.5);
+            box-shadow: 0 20px 50px rgba(251, 191, 36, 0.15);
+        }
+
+        .challenge-bar h4 {
+            font-size: 20px;
+            font-weight: 600;
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .challenge-bar p {
+            font-size: 15px;
+            color: rgba(255, 255, 255, 0.7);
+            line-height: 1.7;
+        }
+
+        .challenge-bar strong {
+            color: #fbbf24;
+        }
+
+        /* 键盘提示 */
+        .keyboard-hint {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            padding: 10px 16px;
+            border-radius: 10px;
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.4);
+            z-index: 100;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .keyboard-hint kbd {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 3px 10px;
+            border-radius: 6px;
+            margin: 0 4px;
+            font-family: inherit;
+        }
+    </style>
+</head>
+<body>
+    <div class="slide-container" id="slideContainer">
+        <!-- 第一页：故事线 + 主问题 -->
+        <div class="slide slide-1">
+            <div class="bg-gradient"></div>
+            <div class="light-line light-line-1"></div>
+            <div class="light-line light-line-2"></div>
+            <div class="light-line light-line-3"></div>
+
+            <div class="header">
+                <p class="page-tag fade-in">企业战略管理 · 案例分析</p>
+                <h1 class="page-title fade-in fade-in-delay-1">小红书的电商探索与转型</h1>
+                <p class="page-subtitle fade-in fade-in-delay-2">从"种草"到"拔草"的十年商业化之路</p>
+            </div>
+
+            <div class="core-problem fade-in fade-in-delay-3">
+                <p class="label">核心问题</p>
+                <p class="question">小红书如何破解"只种草，不拔草"的困境？</p>
+            </div>
+
+            <div class="timeline">
+                <div class="timeline-item fade-in fade-in-delay-2">
+                    <div class="year pulse-ring">2013</div>
+                    <div class="content">
+                        <div class="title">PGC海淘攻略</div>
+                        <div class="desc">PDF购物指南</div>
+                    </div>
+                </div>
+                <div class="timeline-item fade-in fade-in-delay-3">
+                    <div class="year pulse-ring">2014</div>
+                    <div class="content">
+                        <div class="title">UGC社区</div>
+                        <div class="desc">购物分享社区</div>
+                    </div>
+                </div>
+                <div class="timeline-item fade-in fade-in-delay-4">
+                    <div class="year pulse-ring">'14-'21</div>
+                    <div class="content">
+                        <div class="title">社区+电商</div>
+                        <div class="desc">福利社→自营</div>
+                    </div>
+                </div>
+                <div class="timeline-item fade-in fade-in-delay-5">
+                    <div class="year pulse-ring">2023</div>
+                    <div class="content">
+                        <div class="title">买手电商</div>
+                        <div class="desc">关闭自营转型</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 第二页：战略环境分析 -->
+        <div class="slide slide-2">
+            <div class="bg-gradient"></div>
+
+            <div class="header">
+                <p class="page-tag fade-in">Strategic Analysis</p>
+                <h1 class="page-title fade-in fade-in-delay-1">战略环境分析</h1>
+            </div>
+
+            <div class="analysis-container">
+                <div class="analysis-card pest glow-border fade-in fade-in-delay-2">
+                    <h3><span class="icon">🌍</span> PEST 分析</h3>
+                    <div class="analysis-item">
+                        <div class="header">
+                            <span class="letter">P</span>
+                            <span class="name">政治</span>
+                        </div>
+                        <p class="desc">跨境电商政策支持、直播带货监管趋严</p>
+                    </div>
+                    <div class="analysis-item">
+                        <div class="header">
+                            <span class="letter">E</span>
+                            <span class="name">经济</span>
+                        </div>
+                        <p class="desc">电商市场持续增长、消费分级趋势明显</p>
+                    </div>
+                    <div class="analysis-item">
+                        <div class="header">
+                            <span class="letter">S</span>
+                            <span class="name">社会</span>
+                        </div>
+                        <p class="desc">女性用户主导、追求品质生活与信任经济</p>
+                    </div>
+                    <div class="analysis-item">
+                        <div class="header">
+                            <span class="letter">T</span>
+                            <span class="name">技术</span>
+                        </div>
+                        <p class="desc">直播技术成熟、AI推荐算法提升体验</p>
+                    </div>
+                </div>
+
+                <div class="analysis-card forces glow-border fade-in fade-in-delay-3">
+                    <h3><span class="icon">⚡</span> 波特五力</h3>
+                    <div class="analysis-item">
+                        <div class="header">
+                            <span class="letter">供</span>
+                            <span class="name">供应商议价</span>
+                        </div>
+                        <p class="desc">品牌方、MCN机构议价能力中等</p>
+                    </div>
+                    <div class="analysis-item">
+                        <div class="header">
+                            <span class="letter">买</span>
+                            <span class="name">购买者议价</span>
+                        </div>
+                        <p class="desc">用户忠诚度低，"货比三家"习惯明显</p>
+                    </div>
+                    <div class="analysis-item">
+                        <div class="header">
+                            <span class="letter">新</span>
+                            <span class="name">新进入者</span>
+                        </div>
+                        <p class="desc">淘宝"逛逛"、拼多多"拼小圈"、京东"种草秀"</p>
+                    </div>
+                    <div class="analysis-item">
+                        <div class="header">
+                            <span class="letter">替</span>
+                            <span class="name">替代品</span>
+                        </div>
+                        <p class="desc">抖音、快手直播电商强势竞争</p>
+                    </div>
+                    <div class="analysis-item">
+                        <div class="header">
+                            <span class="letter">内</span>
+                            <span class="name">行业内竞争</span>
+                        </div>
+                        <p class="desc">电商红海，价格战激烈</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 第三页：问题诊断 + 发展方案 -->
+        <div class="slide slide-3">
+            <div class="bg-gradient"></div>
+
+            <div class="header">
+                <p class="page-tag fade-in">Diagnosis & Strategy</p>
+                <h1 class="page-title fade-in fade-in-delay-1">问题诊断与发展方案</h1>
+            </div>
+
+            <div class="content-grid">
+                <div class="problem-card glow-border fade-in fade-in-delay-2">
+                    <h3 class="card-title">
+                        <span>⚠️</span> 核心问题
+                    </h3>
+                    <ul class="card-list">
+                        <li>
+                            <span class="num">1</span>
+                            <span>广告收入占比 <strong class="number-glow">80%</strong>，收入结构单一</span>
+                        </li>
+                        <li>
+                            <span class="num">2</span>
+                            <span>用户"种草后去其他平台拔草"，<strong>流量无法变现</strong></span>
+                        </li>
+                        <li>
+                            <span class="num">3</span>
+                            <span>直播电商缺乏头部主播，仅<strong>董洁、章小蕙</strong>出圈</span>
+                        </li>
+                        <li>
+                            <span class="num">4</span>
+                            <span>供应链能力不足，货盘品类受限</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="solution-card glow-border fade-in fade-in-delay-3">
+                    <h3 class="card-title">
+                        <span>✓</span> 战略方案
+                    </h3>
+                    <ul class="card-list">
+                        <li>
+                            <span class="num">1</span>
+                            <span><strong>买手电商</strong>：创作者成为交易入口，打通种草-拔草闭环</span>
+                        </li>
+                        <li>
+                            <span class="num">2</span>
+                            <span><strong>差异化定位</strong>："高质量+生活化"vs抖音"低价吆喝"</span>
+                        </li>
+                        <li>
+                            <span class="num">3</span>
+                            <span><strong>本地生活</strong>：线上种草→线下消费，开拓新增长点</span>
+                        </li>
+                        <li>
+                            <span class="num">4</span>
+                            <span><strong>社区+商业融合</strong>：坚守用户体验优先原则</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="challenge-bar glow-border fade-in fade-in-delay-4">
+                    <h4>🔮 未来挑战</h4>
+                    <p>供应链能力能否跟上？能否培养更多优质买手？如何平衡商业化与社区生态？仅靠"调性"能否对抗抖音淘宝的低价攻势？消费者最终只关心<strong>产品、价格、服务</strong>三要素。</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 导航 -->
+    <button class="nav-btn prev" onclick="prevSlide()">←</button>
+    <button class="nav-btn next" onclick="nextSlide()">→</button>
+
+    <!-- 页码指示 -->
+    <div class="page-indicator">
+        <div class="dot active" onclick="goToSlide(0)"></div>
+        <div class="dot" onclick="goToSlide(1)"></div>
+        <div class="dot" onclick="goToSlide(2)"></div>
+    </div>
+
+    <!-- 键盘提示 -->
+    <div class="keyboard-hint">
+        <kbd>←</kbd> <kbd>→</kbd> 切换页面
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const totalSlides = 3;
+        const container = document.getElementById('slideContainer');
+        const dots = document.querySelectorAll('.dot');
+
+        function updateSlide() {
+            container.style.transform = `translateX(-${currentSlide * 100}vw)`;
+            dots.forEach((dot, index) => {
+                dot.classList.toggle('active', index === currentSlide);
+            });
+        }
+
+        function nextSlide() {
+            if (currentSlide < totalSlides - 1) {
+                currentSlide++;
+                updateSlide();
+            }
+        }
+
+        function prevSlide() {
+            if (currentSlide > 0) {
+                currentSlide--;
+                updateSlide();
+            }
+        }
+
+        function goToSlide(index) {
+            currentSlide = index;
+            updateSlide();
+        }
+
+        // 键盘导航
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === ' ') {
+                e.preventDefault();
+                nextSlide();
+            } else if (e.key === 'ArrowLeft') {
+                e.preventDefault();
+                prevSlide();
+            }
+        });
+
+        // 触摸滑动支持
+        let touchStartX = 0;
+        document.addEventListener('touchstart', (e) => {
+            touchStartX = e.changedTouches[0].screenX;
+        });
+        document.addEventListener('touchend', (e) => {
+            const touchEndX = e.changedTouches[0].screenX;
+            if (touchStartX - touchEndX > 50) nextSlide();
+            else if (touchEndX - touchStartX > 50) prevSlide();
+        });
+    </script>
+</body>
+</html>
